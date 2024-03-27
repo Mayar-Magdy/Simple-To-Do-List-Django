@@ -1,36 +1,145 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>To-Do List</title>
+    <link rel="icon" href="favicon.png" type="image/png">
+
     <style>
-        /* Add your CSS styles here */
+        /* Body Styles */
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            background-color: #f4f4f4;
         }
+
+        /* Heading Styles */
+        h1 {
+            color: #333333;
+            border-bottom: 2px solid #333333;
+            padding-bottom: 10px;
+        }
+
+        /* Form Styles */
+        form {
+            margin-bottom: 20px;
+        }
+
+        input[type="text"],
+        textarea,
+        button {
+            width: 100%;
+            padding: 8px;
+            margin-top: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 0 4px 4px 0;
+            width: auto;
+            padding: 5px 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Task Styles */
         .task {
+            background-color: #ffffff;
+            padding: 10px;
             margin-bottom: 10px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
         }
-        .completed {
+
+        .task button {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+        }
+
+        .task.completed {
+            background-color: #e6e6e6;
             text-decoration: line-through;
         }
+          .task a.complete-link {
+            color: #28a745;
+        }
+            .task a.delete-link {
+            color: #dc3545; 
+        }
+
+        .task a {
+            margin-left: 10px;
+            text-decoration: none;
+            color: #007BFF;
+        }
+
+        .task a:hover {
+            text-decoration: underline;
+        }
+
+        .edit-form {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .edit-form.show {
+            display: block;
+        }
+
+        .edit-form input[type="text"],
+        .edit-form textarea {
+            width: calc(100% - 20px);
+            padding: 5px;
+            margin-bottom: 10px;
+        }
     </style>
+    <script>
+        function toggleEditForm(taskId) {
+            const editForm = document.getElementById('edit-form-' + taskId);
+            if (editForm.style.display === 'none' || editForm.style.display === '') {
+                editForm.style.display = 'block';
+            } else {
+                editForm.style.display = 'none';
+            }
+        }
+    </script>
 </head>
+
 <body>
     <h1>To-Do List</h1>
     <form action="{% url 'add_task' %}" method="post">
         {% csrf_token %}
-        <input type="text" name="title" placeholder="Add new task">
+        <input type="text" name="title" placeholder="Add new task" required>
+        <textarea name="description" placeholder="Add task description"></textarea>
         <button type="submit">Add</button>
     </form>
     <ul>
         {% for task in tasks %}
         <li class="task {% if task.completed %}completed{% endif %}">
-            <a href="{% url 'complete_task' task.id %}">Complete</a>
-            {{ task.title }}
-            <a href="{% url 'delete_task' task.id %}">Delete</a>
+            <a href="{% url 'complete_task' task.id %}" class="complete-link">Complete</a>
+            <strong>{{ task.title }}</strong>
+            <p>{{ task.description }}</p>
+            <button onclick="toggleEditForm({{task.id}}); return false;">Edit</button>
+            <form id="edit-form-{{ task.id }}" action="{% url 'edit_task' task.id %}" method="post" class="edit-form">
+                {% csrf_token %}
+                <input type="text" name="title" value="{{ task.title }}" required>
+                <textarea name="description">{{ task.description }}</textarea>
+                <button type="submit">Save</button>
+            </form>
+            <a href="{% url 'delete_task' task.id %}" class="delete-link">Delete</a>
         </li>
         {% endfor %}
     </ul>
 </body>
+
 </html>
