@@ -27,6 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     'todo--list-3ed85a56a411.herokuapp.com',
+    '127.0.0.1',
 ]
 
 
@@ -124,7 +125,8 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, "todo_app/static"),
+    os.path.join(BASE_DIR, "todo_app/static/todo_app/img"),
 ]
 
 # Default primary key field type
