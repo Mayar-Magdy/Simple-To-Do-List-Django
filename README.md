@@ -64,5 +64,6 @@ A simple To-Do list web application built using Django. This project allows user
 
 ## Deployment
 
-The project is deployed on Heroku. You can access the deployed application [here](https://simple-todo-list-app.herokuapp.com/).
+The project is deployed on Heroku. You can access the deployed application [here](
+https://todo--list-3ed85a56a411.herokuapp.com).
 
